@@ -1,8 +1,8 @@
 /*
  * File:   Main_HeatDevice.c
  * Author: lenovo
- *11111111111
- * Created on 2015Äê12ÔÂ31ÈÕ, ÏÂÎç3:41
+ *
+ * Created on 2015å¹´12æœˆ31æ—¥, ä¸‹åˆ3:41
  */          
 #include <xc.h>
 #include <pic.h>
@@ -34,7 +34,7 @@
 #define DS_HIGH     (PORTCbits.RC5 = 1)
 #define DS_LOW      (PORTCbits.RC5 = 0)
 
-/* °´¼üÕóÁĞ±ê¼Ç£¬ÓÃÓÚ¼ÇÂ¼ÄÄ¸ö°´¼ü±»°´ÏÂÁË */
+/* æŒ‰é”®é˜µåˆ—æ ‡è®°ï¼Œç”¨äºè®°å½•å“ªä¸ªæŒ‰é”®è¢«æŒ‰ä¸‹äº† */
 typedef union
 {
     struct {
@@ -51,59 +51,59 @@ typedef union
 } KeyBoardPress_t;
 
 unsigned char LedDisplayMap[17] = {0xe7,0x82,0xd5,0xd3,0xb2,0x73,0x77,0xc2,0xf7,0xf3,0xfe,0x3f,0x65,0x9f,0x7d,0x7c,0x10};
-unsigned short g_uiLeftLedDisplayStatuValue = 0;    /* Ê®½øÖÆÎ»µÄÊıÂë¹ÜµÄ×´Ì¬Öµ¼ÇÂ¼ */
-unsigned short g_uiRightLedDisplayStatuValue = 0;   /* ¸öÎ»µÄÊıÂë¹ÜµÄ×´Ì¬Öµ¼ÇÂ¼ */
-unsigned short g_uiFunLedDisplayStatuValue = 0;     /* ¹¦ÄÜ×´Ì¬µÆµÄ×´Ì¬Öµ¼ÇÂ¼ */
-unsigned char g_ucLedDisplayConFlag =0;             /* µÆÂÖÑ¯µãÁÁ±ê¼Ç£¬0Ê®½øÖÆÊıÂë¹Ü£¬1¸öÎ»ÊıÂë¹Ü£¬2¹¦ÄÜ×´Ì¬µÆ */
-unsigned char g_ucInfraRedFlag = 0;                 /* ºìÍâĞÅºÅ´¥·¢±ê¼Ç */
-unsigned short g_uiInfraRedCounter = 0;             /* ºìÍâĞÅºÅÊ±³¤Ïà¶ÔÓÚ¶¨Ê±Æ÷ÉÏ±¨µÄ´ÎÊı£¬ÓÃÓÚ¹ÀËãÒ»¸öºìÍâĞÅºÅµÄÊ±³¤ */
-unsigned char g_ucStartFlagValid = 0;               /* Ç°µ¼ÂëÓĞĞ§±ê¼Ç£¬ÓÃ×÷ÅĞ¶ÏÌõ¼ş£¬Ö»ÓĞÔÚÇ°µ¼ÂëÓĞĞ§µÄÇé¿öÏÂ£¬ºóĞøµÄÊı¾İ²ÅÓĞÒâÒå */
-unsigned char g_ucDataIndex = 31;                   /* ºìÍâÓĞĞ§Êı¾İÏÂ±ê */
-unsigned int g_InfraData = 0;                       /* ´æ´¢ºìÍâÊı¾İ */
-unsigned char g_ucTimeCounter = 0;                  /* È¥¶¶Ïû³ıĞèÒªÑÓÊ±20ms×óÓÒ£¬Õâ¸ö±äÁ¿ÓÃÀ´¼ÇÂ¼timer¶¨Ê±Æ÷ÖĞÊµ¼Ê½øÈëµÄ´ÎÊı£¬ÒÔ´ËÀ´¹ÀËãÑÓÊ±Ê±¼ä */
-unsigned char g_ucPowerKeyPress = 0;                /* µçÔ´¼üÊÇ·ñ°´ÏÂ£¬ÓÃÓÚ±êÊ¶ÏµÍ³ÊÇ·ñ¹¤×÷ */
-unsigned char g_ucModeChoosedKeyPressCount = 0;     /* ÓÃÓÚ¼ÇÂ¼Ä£Ê½Ñ¡Ôñ°´Å¥µÄ°´ÏÂ´ÎÊı£¬ÓÃÓÚ¿ØÖÆµ±Ç°µÄ¹¤×÷Ä£Ê½ */
-unsigned char g_ucInConstantTempe = 0;              /* ºãÎÂÄ£Ê½±ê¼Ç */
-unsigned char g_ucCurrentTempValue = 0;             /* ÓÃÓÚ¼ÇÂ¼µ±Ç°ºãÎÂ×´Ì¬ÉèÖÃµÄÎÂ¶ÈÖµ */
-unsigned char g_ucSetTimerValue = 0;                /* ¶¨Ê±Ê±¼äÉèÖÃÖµ */
-unsigned char g_ucLedFlashFlag = 0;                 /* ÊıÂë¹ÜÉÁË¸±ê¼Ç£¬µ±ÎÂ¶È¼Ó¼õºÍ¶¨Ê±Ê±¼ä¸Ä±äÊ±ĞèÒªÓĞÉÁË¸ÏÖÏó */
-unsigned short g_usLedFlashCounter = 0;             /* ÊıÂë¹ÜÉÁË¸¶¨Ê±¼ÆÊı£¬ÉèÖÃ500msÉÁË¸Ò»´Î */
-unsigned short g_usCountDownCounter = 0;            /* 1Ãë¶¨Ê± */
-//unsigned char g_ucCountDownFlag = 0;                /* µ¹¼ÆÊ±±ê¼Ç */
-unsigned char g_ucLedFlashCounterFlag = 0;          /* ÓÃÓÚ¼ÇÂ¼ÊıÂë¹ÜÉÁË¸µÄ±ê¼Ç */
-unsigned char g_ucTimerKeySwitchFlag = 0;           /* ¶¨Ê±°´Å¥ÇĞ»»±ê¼Ç£¬µ±°´ÏÂÆäËû°´¼üÊ±ĞèÒª½«Õâ¸ö±ê¼ÇÖÃÉÏ */
-unsigned char g_ucChildLockFunEnableFlag = 0;       /* Í¯Ëø¹¦ÄÜ¿ªÆô±ê¼Ç£¬µ±Õâ¸ö±ê¼ÇÖÃÉÏÊ±£¬ÆäËû°´¼ü¹¦ÄÜ¹Ø±Õ */
-unsigned char g_ucCountDownValue = 59;              /* µ¹¼ÆÊ±³õÊ¼Öµ */
-unsigned char g_ucPowerDownFlag = 0;                /* µçÔ´¼ü±»°´ÏÂÊ±ÉèÖÃ¸Ã±ê¼Ç£¬ÓÃÀ´Ê¹ÄÜµ¹¼ÆÊ±²Ù×÷ */
-unsigned char g_ucHighTempOpenFlag = 0;             /* ¸ßÎÂ¿ªÆô±ê¼Ç */
-unsigned short g_usHighTempOpenCount = 0;           /* ÓÃÓÚ¸ßÎÂ¶¨Ê±¼ÆÊı */
-unsigned char g_ucHighTempFirstChooseFlag = 1;      /* µ±¿ªµçÔ´Ê×´Î±»°´ÏÂÊ±£¬ĞèÒªÓÃ5ÃëµÄÑÓÊ±£¬ÆäËû²»ĞèÒª */
-unsigned short g_usAdcCoverTimerCount = 0;          /* Adc×ª»»¶¨Ê±Æ÷¼ÆÊı£¬Ã¿10·¢ÆğÒ»´Îadc¶ÁÈ¡²Ù×÷£¬ÓÃÓÚ¼à¿ØÎÂ¶È */
-unsigned short g_usTimerFuncCount = 0;              /* ¶¨Ê±¹¦ÄÜ¼ÆÊı£¬Ã¿10Ãë¼ÓÒ»´Î */
-unsigned short g_ausSenserRValueMap[11] = {801, 786, 770, 754, 738, 722, 703, 687, 668, 651, 631};    /* 10-30¶¼Ö®¼ä°´10µµÀ´½øĞĞÎÂ¶È¿ØÖÆ */         
-KeyBoardPress_t g_unPressFlag;                      /* °´¼ü±ê¼Ç£¬ÓÃÓÚ¼ÇÂ¼ÄÄ¸ö°´¼ü±»°´ÏÂ */
+unsigned short g_uiLeftLedDisplayStatuValue = 0;    /* åè¿›åˆ¶ä½çš„æ•°ç ç®¡çš„çŠ¶æ€å€¼è®°å½• */
+unsigned short g_uiRightLedDisplayStatuValue = 0;   /* ä¸ªä½çš„æ•°ç ç®¡çš„çŠ¶æ€å€¼è®°å½• */
+unsigned short g_uiFunLedDisplayStatuValue = 0;     /* åŠŸèƒ½çŠ¶æ€ç¯çš„çŠ¶æ€å€¼è®°å½• */
+unsigned char g_ucLedDisplayConFlag =0;             /* ç¯è½®è¯¢ç‚¹äº®æ ‡è®°ï¼Œ0åè¿›åˆ¶æ•°ç ç®¡ï¼Œ1ä¸ªä½æ•°ç ç®¡ï¼Œ2åŠŸèƒ½çŠ¶æ€ç¯ */
+unsigned char g_ucInfraRedFlag = 0;                 /* çº¢å¤–ä¿¡å·è§¦å‘æ ‡è®° */
+unsigned short g_uiInfraRedCounter = 0;             /* çº¢å¤–ä¿¡å·æ—¶é•¿ç›¸å¯¹äºå®šæ—¶å™¨ä¸ŠæŠ¥çš„æ¬¡æ•°ï¼Œç”¨äºä¼°ç®—ä¸€ä¸ªçº¢å¤–ä¿¡å·çš„æ—¶é•¿ */
+unsigned char g_ucStartFlagValid = 0;               /* å‰å¯¼ç æœ‰æ•ˆæ ‡è®°ï¼Œç”¨ä½œåˆ¤æ–­æ¡ä»¶ï¼Œåªæœ‰åœ¨å‰å¯¼ç æœ‰æ•ˆçš„æƒ…å†µä¸‹ï¼Œåç»­çš„æ•°æ®æ‰æœ‰æ„ä¹‰ */
+unsigned char g_ucDataIndex = 31;                   /* çº¢å¤–æœ‰æ•ˆæ•°æ®ä¸‹æ ‡ */
+unsigned int g_InfraData = 0;                       /* å­˜å‚¨çº¢å¤–æ•°æ® */
+unsigned char g_ucTimeCounter = 0;                  /* å»æŠ–æ¶ˆé™¤éœ€è¦å»¶æ—¶20mså·¦å³ï¼Œè¿™ä¸ªå˜é‡ç”¨æ¥è®°å½•timerå®šæ—¶å™¨ä¸­å®é™…è¿›å…¥çš„æ¬¡æ•°ï¼Œä»¥æ­¤æ¥ä¼°ç®—å»¶æ—¶æ—¶é—´ */
+unsigned char g_ucPowerKeyPress = 0;                /* ç”µæºé”®æ˜¯å¦æŒ‰ä¸‹ï¼Œç”¨äºæ ‡è¯†ç³»ç»Ÿæ˜¯å¦å·¥ä½œ */
+unsigned char g_ucModeChoosedKeyPressCount = 0;     /* ç”¨äºè®°å½•æ¨¡å¼é€‰æ‹©æŒ‰é’®çš„æŒ‰ä¸‹æ¬¡æ•°ï¼Œç”¨äºæ§åˆ¶å½“å‰çš„å·¥ä½œæ¨¡å¼ */
+unsigned char g_ucInConstantTempe = 0;              /* æ’æ¸©æ¨¡å¼æ ‡è®° */
+unsigned char g_ucCurrentTempValue = 0;             /* ç”¨äºè®°å½•å½“å‰æ’æ¸©çŠ¶æ€è®¾ç½®çš„æ¸©åº¦å€¼ */
+unsigned char g_ucSetTimerValue = 0;                /* å®šæ—¶æ—¶é—´è®¾ç½®å€¼ */
+unsigned char g_ucLedFlashFlag = 0;                 /* æ•°ç ç®¡é—ªçƒæ ‡è®°ï¼Œå½“æ¸©åº¦åŠ å‡å’Œå®šæ—¶æ—¶é—´æ”¹å˜æ—¶éœ€è¦æœ‰é—ªçƒç°è±¡ */
+unsigned short g_usLedFlashCounter = 0;             /* æ•°ç ç®¡é—ªçƒå®šæ—¶è®¡æ•°ï¼Œè®¾ç½®500msé—ªçƒä¸€æ¬¡ */
+unsigned short g_usCountDownCounter = 0;            /* 1ç§’å®šæ—¶ */
+//unsigned char g_ucCountDownFlag = 0;                /* å€’è®¡æ—¶æ ‡è®° */
+unsigned char g_ucLedFlashCounterFlag = 0;          /* ç”¨äºè®°å½•æ•°ç ç®¡é—ªçƒçš„æ ‡è®° */
+unsigned char g_ucTimerKeySwitchFlag = 0;           /* å®šæ—¶æŒ‰é’®åˆ‡æ¢æ ‡è®°ï¼Œå½“æŒ‰ä¸‹å…¶ä»–æŒ‰é”®æ—¶éœ€è¦å°†è¿™ä¸ªæ ‡è®°ç½®ä¸Š */
+unsigned char g_ucChildLockFunEnableFlag = 0;       /* ç«¥é”åŠŸèƒ½å¼€å¯æ ‡è®°ï¼Œå½“è¿™ä¸ªæ ‡è®°ç½®ä¸Šæ—¶ï¼Œå…¶ä»–æŒ‰é”®åŠŸèƒ½å…³é—­ */
+unsigned char g_ucCountDownValue = 59;              /* å€’è®¡æ—¶åˆå§‹å€¼ */
+unsigned char g_ucPowerDownFlag = 0;                /* ç”µæºé”®è¢«æŒ‰ä¸‹æ—¶è®¾ç½®è¯¥æ ‡è®°ï¼Œç”¨æ¥ä½¿èƒ½å€’è®¡æ—¶æ“ä½œ */
+unsigned char g_ucHighTempOpenFlag = 0;             /* é«˜æ¸©å¼€å¯æ ‡è®° */
+unsigned short g_usHighTempOpenCount = 0;           /* ç”¨äºé«˜æ¸©å®šæ—¶è®¡æ•° */
+unsigned char g_ucHighTempFirstChooseFlag = 1;      /* å½“å¼€ç”µæºé¦–æ¬¡è¢«æŒ‰ä¸‹æ—¶ï¼Œéœ€è¦ç”¨5ç§’çš„å»¶æ—¶ï¼Œå…¶ä»–ä¸éœ€è¦ */
+unsigned short g_usAdcCoverTimerCount = 0;          /* Adcè½¬æ¢å®šæ—¶å™¨è®¡æ•°ï¼Œæ¯10å‘èµ·ä¸€æ¬¡adcè¯»å–æ“ä½œï¼Œç”¨äºç›‘æ§æ¸©åº¦ */
+unsigned short g_usTimerFuncCount = 0;              /* å®šæ—¶åŠŸèƒ½è®¡æ•°ï¼Œæ¯10ç§’åŠ ä¸€æ¬¡ */
+unsigned short g_ausSenserRValueMap[11] = {801, 786, 770, 754, 738, 722, 703, 687, 668, 651, 631};    /* 10-30éƒ½ä¹‹é—´æŒ‰10æ¡£æ¥è¿›è¡Œæ¸©åº¦æ§åˆ¶ */         
+KeyBoardPress_t g_unPressFlag;                      /* æŒ‰é”®æ ‡è®°ï¼Œç”¨äºè®°å½•å“ªä¸ªæŒ‰é”®è¢«æŒ‰ä¸‹ */
 
-#define PICF1503_ADC_TEMP_OFFSET              (8)   /* ÒòÎªADC²ÉÑùµÄÖµ»á²»Í£µÄ¸¡¶¯£¬ĞèÒªÔö¼ÓÒ»¸ö */
+#define PICF1503_ADC_TEMP_OFFSET              (8)   /* å› ä¸ºADCé‡‡æ ·çš„å€¼ä¼šä¸åœçš„æµ®åŠ¨ï¼Œéœ€è¦å¢åŠ ä¸€ä¸ª */
 
 void PicF1503_SystemTime_Config(void)
 {
-    /* ÅäÖÃÎªÄÚ²¿Ê±ÖÓÔ´£¬ÇÒÊ±ÖÓÆµÂÊÎª16Õ× */
+    /* é…ç½®ä¸ºå†…éƒ¨æ—¶é’Ÿæºï¼Œä¸”æ—¶é’Ÿé¢‘ç‡ä¸º16å…† */
     OSCCONbits.IRCF = 0xF;
     OSCCONbits.SCS = 0x3;
 }
 void Pic16F1503_Adc_Init(void)
 {
-    /* ÅäÖÃ½á¹ûÊä³ö¸ñÊ½ÎªÓÒ¶ÔÆë£¬ADCÊäÈëÊ±ÖÓÎªÏµÍ³Ê±ÖÓµÄ4·ÖÆµ */
+    /* é…ç½®ç»“æœè¾“å‡ºæ ¼å¼ä¸ºå³å¯¹é½ï¼ŒADCè¾“å…¥æ—¶é’Ÿä¸ºç³»ç»Ÿæ—¶é’Ÿçš„4åˆ†é¢‘ */
     ADCON1bits.ADFM = 1;
     ADCON1bits.ADCS = 4;
-    /* ÅäÖÃ»ù×¼µçÑ¹ */
+    /* é…ç½®åŸºå‡†ç”µå‹ */
     ADCON1bits.ADPREF = 0;
 
-    /* Ñ¡ÔñADCÍ¨µÀ£¬²¢Ê¹ÄÜADC¹¦ÄÜ */
+    /* é€‰æ‹©ADCé€šé“ï¼Œå¹¶ä½¿èƒ½ADCåŠŸèƒ½ */
     ADCON0bits.CHS = 0;
     ADCON0bits.ADON = 1;
     
-    /* Çå³ıÖĞ¶Ï±ê¼Ç£¬Ê¹ÄÜADCÖĞ¶Ï */
+    /* æ¸…é™¤ä¸­æ–­æ ‡è®°ï¼Œä½¿èƒ½ADCä¸­æ–­ */
     PIR1bits.ADIF = 0;
     PIE1bits.ADIE = 1;
     
@@ -111,8 +111,8 @@ void Pic16F1503_Adc_Init(void)
 void Pic16F1503_Gpio_Init(void)
 {
 #if 0
-    OPTION_REG &= 0x7F; //ÇåÁãOPTION_REG ¼Ä´æÆ÷µÄÈ«¾ÖWPUEN Î»£¬´Ó¶øÊ¹ÄÜ¸÷¸öÉÏÀ­¹¦ÄÜ
-    /* ÅäÖÃporta0,1,2ÎªÊı×ÖĞÅºÅÊäÈë,ÈõÉÏÀ­£¬ÖĞ¶Ï´¥·¢·½Ê½ÎªÏÂ½µÑØ´¥·¢,Çå³ıÖĞ¶Ï±ê¼Ç */
+    OPTION_REG &= 0x7F; //æ¸…é›¶OPTION_REG å¯„å­˜å™¨çš„å…¨å±€WPUEN ä½ï¼Œä»è€Œä½¿èƒ½å„ä¸ªä¸Šæ‹‰åŠŸèƒ½
+    /* é…ç½®porta0,1,2ä¸ºæ•°å­—ä¿¡å·è¾“å…¥,å¼±ä¸Šæ‹‰ï¼Œä¸­æ–­è§¦å‘æ–¹å¼ä¸ºä¸‹é™æ²¿è§¦å‘,æ¸…é™¤ä¸­æ–­æ ‡è®° */
     TRISA0 = 1;
     ANSELAbits.ANSA0 = 0;
     WPUAbits.WPUA0 = 1;
@@ -128,33 +128,33 @@ void Pic16F1503_Gpio_Init(void)
     WPUAbits.WPUA2 = 1;
     IOCAFbits.IOCAF2 = 0;
     IOCANbits.IOCAN2 = 1;
-    /* ÈõÉÏÀ­£¬ÖĞ¶Ï´¥·¢·½Ê½ÎªÏÂ½µÑØ´¥·¢£¬Çå³ıÖĞ¶Ï±ê¼Ç */
+    /* å¼±ä¸Šæ‹‰ï¼Œä¸­æ–­è§¦å‘æ–¹å¼ä¸ºä¸‹é™æ²¿è§¦å‘ï¼Œæ¸…é™¤ä¸­æ–­æ ‡è®° */
     TRISA3 = 1;
     WPUAbits.WPUA3 = 1;
     IOCAFbits.IOCAF3 = 0;
     IOCANbits.IOCAN3 = 1;
-    /* ÅäÖÃporta4,5Êı×ÖĞÅºÅÊä³ö,ÖÃ¹Ü½ÅÎªµÍµçÆ½ */
+    /* é…ç½®porta4,5æ•°å­—ä¿¡å·è¾“å‡º,ç½®ç®¡è„šä¸ºä½ç”µå¹³ */
     TRISA4 = 0;
     ANSELAbits.ANSA4 = 0;
     TRISA5 = 0;
     PORTAbits.RA4 = 0;
     PORTAbits.RA5 = 0;
     
-    /* ÅäÖÃportc3,4,5Êı×ÖĞÅºÅÊä³ö */
+    /* é…ç½®portc3,4,5æ•°å­—ä¿¡å·è¾“å‡º */
     TRISC3 = 0;
     ANSELCbits.ANSC3 = 0;
     TRISC4 = 0;
     TRISC5 = 0;
-    /* ÅäÖÃportc2ÎªÄ£ÄâĞÅºÅÊäÈë */
+    /* é…ç½®portc2ä¸ºæ¨¡æ‹Ÿä¿¡å·è¾“å…¥ */
     TRISC2 = 1;
     ANSELCbits.ANSC2 = 1;
     
-    /* Ê¹ÄÜGPIOÖĞ¶Ï */
+    /* ä½¿èƒ½GPIOä¸­æ–­ */
     INTCONbits.IOCIE = 1;
 #else
-    OPTION_REG &= 0x7F; //ÇåÁãOPTION_REG ¼Ä´æÆ÷µÄÈ«¾ÖWPUEN Î»£¬´Ó¶øÊ¹ÄÜ¸÷¸öÉÏÀ­¹¦ÄÜ
-    /* ÅäÖÃporta0,1,2,3ÎªÊı×ÖĞÅºÅÊäÈë,ÈõÉÏÀ­£¬ÖĞ¶Ï´¥·¢·½Ê½ÎªÏÂ½µÑØ´¥·¢,Çå³ıÖĞ¶Ï±ê¼Ç,port4,5ÎªÊı×ÖĞÅºÅÊä³ö£¬
-     * ¹Ü½ÅÄ¬ÈÏ³õÊ¼»¯ÎªµÍµçÆ½£¬portc3,4,5ÎªÊı×ÖĞÅºÅÊä³ö£¬portc2ÎªÄ£ÄâĞÅºÅÊäÈë */
+    OPTION_REG &= 0x7F; //æ¸…é›¶OPTION_REG å¯„å­˜å™¨çš„å…¨å±€WPUEN ä½ï¼Œä»è€Œä½¿èƒ½å„ä¸ªä¸Šæ‹‰åŠŸèƒ½
+    /* é…ç½®porta0,1,2,3ä¸ºæ•°å­—ä¿¡å·è¾“å…¥,å¼±ä¸Šæ‹‰ï¼Œä¸­æ–­è§¦å‘æ–¹å¼ä¸ºä¸‹é™æ²¿è§¦å‘,æ¸…é™¤ä¸­æ–­æ ‡è®°,port4,5ä¸ºæ•°å­—ä¿¡å·è¾“å‡ºï¼Œ
+     * ç®¡è„šé»˜è®¤åˆå§‹åŒ–ä¸ºä½ç”µå¹³ï¼Œportc3,4,5ä¸ºæ•°å­—ä¿¡å·è¾“å‡ºï¼Œportc2ä¸ºæ¨¡æ‹Ÿä¿¡å·è¾“å…¥ */
     TRISA = 0xf;
     ANSELA = 0x0;
     WPUA |= 0xf;
@@ -166,39 +166,39 @@ void Pic16F1503_Gpio_Init(void)
     ANSELC &= 0xf7;
     ANSELC |= 0x4;
     
-    /* Ê¹ÄÜGPIOÖĞ¶Ï */
+    /* ä½¿èƒ½GPIOä¸­æ–­ */
     INTCONbits.IOCIE = 1;
 #endif
     
     return;
 }
 
-/* ³õÊ¼»¯i2c×ÜÏß */
+/* åˆå§‹åŒ–i2cæ€»çº¿ */
 void Pic16F1503_I2c_Init(void)
 {
-    /* ÅäÖÃSCLºÍSDAÎªÊäÈëÄ£Ê½ */
+    /* é…ç½®SCLå’ŒSDAä¸ºè¾“å…¥æ¨¡å¼ */
     TRISC0 = 1;
     TRISC0 = 1;
     
-    /* ÅäÖÃ¹¤×÷ÆµÂÊ,ÅäÖÃ³É50K£¬¹¤×÷ÔÚÖ÷Ä£Ê½ */
+    /* é…ç½®å·¥ä½œé¢‘ç‡,é…ç½®æˆ50Kï¼Œå·¥ä½œåœ¨ä¸»æ¨¡å¼ */
     SSP1CON1bits.SSPM =0x8;
     SSP1ADDbits.ADD = 0x50;
     
-    /* ¿ªÆôI2CÍ¨ĞÅ */
+    /* å¼€å¯I2Cé€šä¿¡ */
     SSP1CON1bits.SSPEN = 1;
     
      return;   
 }
 
-/* ·¢ËÍÊı¾İ */
+/* å‘é€æ•°æ® */
 void Pic16F1503_I2c_Send(unsigned char ucDeviceAddr, unsigned char ucSendData)
 {
-    /* ·¢ËÍÒ»¸öÆğÊ¼ĞÅºÅ */
+    /* å‘é€ä¸€ä¸ªèµ·å§‹ä¿¡å· */
     SSP1CON2bits.SEN = 1;//Start condition
     while(0 == PIR1bits.SSP1IF);//waiting for Start condition completed.
     PIR1bits.SSP1IF = 0;
     
-    /* ·¢ËÍµÄµÚÒ»¸ö×Ö½Ú°üº¬7Î»µÄÉè±¸µØÖ·ºÍÒ»Î»µÄĞ´±êÖ¾ */
+    /* å‘é€çš„ç¬¬ä¸€ä¸ªå­—èŠ‚åŒ…å«7ä½çš„è®¾å¤‡åœ°å€å’Œä¸€ä½çš„å†™æ ‡å¿— */
     ucDeviceAddr = (ucDeviceAddr << 1) & 0xFE;
     SSP1BUF = ucDeviceAddr;//Device Address
     while(0 == PIR1bits.SSP1IF);
@@ -216,15 +216,15 @@ void Pic16F1503_I2c_Send(unsigned char ucDeviceAddr, unsigned char ucSendData)
    //  ~ACK
 }
 
-/* ½ÓÊÕÊı¾İ */
+/* æ¥æ”¶æ•°æ® */
 void Pic16F1503_I2c_Recive(unsigned char ucDeviceAddr, unsigned char *pucReciveData)
 {
-    /* ·¢ËÍÒ»¸öÆğÊ¼ĞÅºÅ */
+    /* å‘é€ä¸€ä¸ªèµ·å§‹ä¿¡å· */
     SSP1CON2bits.SEN = 1;//Start condition
     while(0 == PIR1bits.SSP1IF);//waiting for Start condition completed.
     PIR1bits.SSP1IF = 0;
     
-    /* ·¢ËÍµÄµÚÒ»¸ö×Ö½Ú°üº¬7Î»µÄÉè±¸µØÖ·ºÍÒ»Î»µÄ¶Á±êÖ¾ */
+    /* å‘é€çš„ç¬¬ä¸€ä¸ªå­—èŠ‚åŒ…å«7ä½çš„è®¾å¤‡åœ°å€å’Œä¸€ä½çš„è¯»æ ‡å¿— */
     ucDeviceAddr = (ucDeviceAddr << 1) | 0x1;
     SSP1BUF = ucDeviceAddr;//Device Address
     while(0 == PIR1bits.SSP1IF);
@@ -254,18 +254,18 @@ void Pic16F1503_I2c_Recive(unsigned char ucDeviceAddr, unsigned char *pucReciveD
 
 void Pic16F1503_Timer1_Init(void)
 {
-    /* ÅäÖÃÊ±ÖÓÎª16M */
+    /* é…ç½®æ—¶é’Ÿä¸º16M */
     T1CONbits.TMR1CS = 1;    
     T1CONbits.T1CKPS = 0;
-    /* ÅäÖÃÊ±ÖÓÍ¬²½£¬´ò¿ª¶¨Ê±Æ÷Timer1 */
+    /* é…ç½®æ—¶é’ŸåŒæ­¥ï¼Œæ‰“å¼€å®šæ—¶å™¨Timer1 */
    // T1CONbits.nT1SYNC = 0;
     T1CONbits.TMR1ON = 1;
     
-    /* ÅäÖÃ¶¨Ê±Æ÷1Ê±¼äÎª0.25MSÉÏ±¨Ò»´Î */
+    /* é…ç½®å®šæ—¶å™¨1æ—¶é—´ä¸º0.25MSä¸ŠæŠ¥ä¸€æ¬¡ */
     TMR1Hbits.TMR1H = 0xF0;
     TMR1Lbits.TMR1L = 0x5F;
     
-    /* Çå³ıÖĞ¶Ï±ê¼Ç£¬Ê¹ÄÜ¶¨Ê±Æ÷ÖĞ¶ÏTimer1 */
+    /* æ¸…é™¤ä¸­æ–­æ ‡è®°ï¼Œä½¿èƒ½å®šæ—¶å™¨ä¸­æ–­Timer1 */
     PIR1bits.TMR1IF = 0;
     PIE1bits.TMR1IE = 1;
     
@@ -275,15 +275,15 @@ void Pic16F1503_Timer1_Init(void)
 
 void Pic16F1503_Timer2_Init(void)
 {
-    /* ÊäÈëÊ±ÖÓÎª4·ÖÆµµÄÏµÍ³Ê±ÖÓ£¬¶ÔÊäÈëÊ±ÖÓÅäÖÃ4·ÖÆµ,¶¨Ê±Æ÷Ê±¼äÎª255us */
+    /* è¾“å…¥æ—¶é’Ÿä¸º4åˆ†é¢‘çš„ç³»ç»Ÿæ—¶é’Ÿï¼Œå¯¹è¾“å…¥æ—¶é’Ÿé…ç½®4åˆ†é¢‘,å®šæ—¶å™¨æ—¶é—´ä¸º255us */
     PR2bits.PR2 = 0xFF;
     T2CONbits.T2CKPS = 1;
     T2CONbits.T2OUTPS = 0;
-    /* ¿ªÆô¶¨Ê±Æ÷Timer2 */
+    /* å¼€å¯å®šæ—¶å™¨Timer2 */
     T2CONbits.TMR2ON = 1;
-    /* Çå³ı¶¨Ê±Æ÷Timer2ÖĞ¶Ï±ê¼Ç */
+    /* æ¸…é™¤å®šæ—¶å™¨Timer2ä¸­æ–­æ ‡è®° */
     PIR1bits.TMR2IF = 0;
-    /* Ê¹ÄÜ¶¨Ê±Æ÷Timer2ÖĞ¶Ï */
+    /* ä½¿èƒ½å®šæ—¶å™¨Timer2ä¸­æ–­ */
     PIE1bits.TMR2IE = 1;
     
     return;
@@ -291,7 +291,7 @@ void Pic16F1503_Timer2_Init(void)
 
 void Pic16F1503_Int_Init(void)
 {
-    /* ¿ªÖĞ¶Ï×Ü¿ª¹Ø */
+    /* å¼€ä¸­æ–­æ€»å¼€å…³ */
     INTCONbits.PEIE = 1;
     INTCONbits.GIE = 1;
     
@@ -360,7 +360,7 @@ void HeatDevice_Set_Device_status(unsigned char ucLeftLedValue, unsigned char uc
 #if 0
 void Pic16F1503_Display_Debug()
 {
-    /* ³õÊ¼»¯Ò»ÏÂ£¬µ÷ÊÔÓÃ */
+    /* åˆå§‹åŒ–ä¸€ä¸‹ï¼Œè°ƒè¯•ç”¨ */
    /* g_uiLeftLedDisplayStatuValue = (LedDisplayMap[16] << 8);
 	g_uiRightLedDisplayStatuValue = (LedDisplayMap[16] << 8);
 	g_uiFunLedDisplayStatuValue = (0 << 8);*/
@@ -376,10 +376,10 @@ void HeatDevice_Display_Led(unsigned short uiSendData)
     return;
 }
 
-/* ÊµÏÖÍ¯Ëø¹¦ÄÜ */
+/* å®ç°ç«¥é”åŠŸèƒ½ */
 void HeatDevice_Child_Lock_Operation(void)
 {
-    /* Í¯Ëø¹¦ÄÜ£¬¼üÅÌÉÏÆäËû°´¼ü¹¦ÄÜ±»¹Ø±Õ£¬Ö»ÓĞ¹Ø±ÕÍ¯Ëø¹¦ÄÜºó²ÅÄÜ¼ÌĞøÊ¹ÓÃ£¬µãÁÁÍ¯Ëø¹¦ÄÜÖ¸Ê¾µÆ */
+    /* ç«¥é”åŠŸèƒ½ï¼Œé”®ç›˜ä¸Šå…¶ä»–æŒ‰é”®åŠŸèƒ½è¢«å…³é—­ï¼Œåªæœ‰å…³é—­ç«¥é”åŠŸèƒ½åæ‰èƒ½ç»§ç»­ä½¿ç”¨ï¼Œç‚¹äº®ç«¥é”åŠŸèƒ½æŒ‡ç¤ºç¯ */
     if (1 == g_ucChildLockFunEnableFlag)
     {
         g_uiFunLedDisplayStatuValue = g_uiFunLedDisplayStatuValue & (~((unsigned short)(0x4000)));
@@ -396,12 +396,12 @@ void HeatDevice_Child_Lock_Operation(void)
     return;
 }
 
-/* µçÔ´¿ª¹Ø¹¦ÄÜÊµÏÖ */
+/* ç”µæºå¼€å…³åŠŸèƒ½å®ç° */
 void HeatDevice_Control_Switch_Operation(void)
 {
     if (1 == g_ucPowerKeyPress)
     {
-        /* Èç¹ûÉÏÒ»´ÎÒÑ´ò¿ª£¬ÔòÕâ´ÎÎª¹Ø±Õ£¬ĞèÒªÖØĞÂ³õÊ¼»¯ÊıÂë¹ÜÏÔÊ¾ºÍµÆµÈÏà¹Ø¹¦ÄÜ */
+        /* å¦‚æœä¸Šä¸€æ¬¡å·²æ‰“å¼€ï¼Œåˆ™è¿™æ¬¡ä¸ºå…³é—­ï¼Œéœ€è¦é‡æ–°åˆå§‹åŒ–æ•°ç ç®¡æ˜¾ç¤ºå’Œç¯ç­‰ç›¸å…³åŠŸèƒ½ */
         g_ucPowerKeyPress = 0;
         g_ucModeChoosedKeyPressCount = 0;
         g_ucInConstantTempe = 0;
@@ -410,7 +410,7 @@ void HeatDevice_Control_Switch_Operation(void)
         g_ucPowerDownFlag = 1;
      //   if (0 == g_ucCountDownFlag)
      //   {
-            /* ¶¨Ê±±ê¼ÇÃ»ÖÃÉÏÊ±Ö±½ÓÏÔÊ¾Ä¬ÈÏÌ¬ */
+            /* å®šæ—¶æ ‡è®°æ²¡ç½®ä¸Šæ—¶ç›´æ¥æ˜¾ç¤ºé»˜è®¤æ€ */
      //       HeatDevice_Set_Device_status(16, 16, 0, 0);
      //   }
          
@@ -420,7 +420,7 @@ void HeatDevice_Control_Switch_Operation(void)
     switch (g_ucInConstantTempe)
     {
         case 0:
-            /* ¿ªÆôµçÔ´¿ª¹ØºóÏÔÊ¾£ºÎÂ¶ÈÖµÄ¬ÈÏÏÔÊ¾Îª30£¬µçÔ´Ö¸Ê¾µÆ£¬¸ºÀë×ÓµÆ£¬ÎÂ¶ÈÖ¸Ê¾µÆµãÁÁ,·äÃùÆ÷½ĞÒ»Éù£¬1Ãëºó¹Ø·äÃùÆ÷,Êä³öµÍËÙ·ç */
+            /* å¼€å¯ç”µæºå¼€å…³åæ˜¾ç¤ºï¼šæ¸©åº¦å€¼é»˜è®¤æ˜¾ç¤ºä¸º30ï¼Œç”µæºæŒ‡ç¤ºç¯ï¼Œè´Ÿç¦»å­ç¯ï¼Œæ¸©åº¦æŒ‡ç¤ºç¯ç‚¹äº®,èœ‚é¸£å™¨å«ä¸€å£°ï¼Œ1ç§’åå…³èœ‚é¸£å™¨,è¾“å‡ºä½é€Ÿé£ */
             HeatDevice_Set_Device_status(3, 0, 0x8a, 0x11);
             break;
         case 1:
@@ -448,13 +448,13 @@ void HeatDevice_Control_Switch_Operation(void)
     return;
 }
 
-/* Ä£Ê½Ñ¡Ôñ¹¦ÄÜÊµÏÖ */
+/* æ¨¡å¼é€‰æ‹©åŠŸèƒ½å®ç° */
 void HeatDevice_WorkMode_Choose_Operation(void)
 {
     switch (g_ucModeChoosedKeyPressCount)
     {
         case 0: 
-            /* ¸ßÎÂµµÊä³ö,ÊıÂë¹ÜÏÔÊ¾30£¬µçÔ´µÆ£¬¸ºÀë×ÓµÆ£¬ÎÂ¶ÈµÆºÍ¸ßÎÂµÆµãÁÁ£¬·ç»úÇĞ»»µ½¸ßËÙµµ£¬µÚÒ»´ÎÑ¡ÔñĞèÒª5Ãëºó¿ªÆô¸ßÎÂ¼ÓÈÈ£¬ÒÔºóµÄÃ¿´Î¶¼Ö±½Ó¿ªÆô¸ßÎÂ¼ÓÈÈ²»ĞèÒªÑÓÊ± */
+            /* é«˜æ¸©æ¡£è¾“å‡º,æ•°ç ç®¡æ˜¾ç¤º30ï¼Œç”µæºç¯ï¼Œè´Ÿç¦»å­ç¯ï¼Œæ¸©åº¦ç¯å’Œé«˜æ¸©ç¯ç‚¹äº®ï¼Œé£æœºåˆ‡æ¢åˆ°é«˜é€Ÿæ¡£ï¼Œç¬¬ä¸€æ¬¡é€‰æ‹©éœ€è¦5ç§’åå¼€å¯é«˜æ¸©åŠ çƒ­ï¼Œä»¥åçš„æ¯æ¬¡éƒ½ç›´æ¥å¼€å¯é«˜æ¸©åŠ çƒ­ä¸éœ€è¦å»¶æ—¶ */
             g_ucInConstantTempe = 2;
            // HeatDevice_Set_Device_status(3, 0, 0x9a, 0x50);
             if (1 == g_ucPowerKeyPress)
@@ -476,7 +476,7 @@ void HeatDevice_WorkMode_Choose_Operation(void)
             g_ucHighTempOpenFlag = 1;
             break;
         case 1:
-            /* µÍÎÂµµÊä³ö,ÊıÂë¹ÜÏÔÊ¾30£¬µçÔ´µÆ£¬¸ºÀë×ÓµÆ£¬ÎÂ¶ÈµÆºÍµÍÎÂµÆµãÁÁ£¬ÇĞ»»µ½µÍÎÂºÍ¸ßËÙ */
+            /* ä½æ¸©æ¡£è¾“å‡º,æ•°ç ç®¡æ˜¾ç¤º30ï¼Œç”µæºç¯ï¼Œè´Ÿç¦»å­ç¯ï¼Œæ¸©åº¦ç¯å’Œä½æ¸©ç¯ç‚¹äº®ï¼Œåˆ‡æ¢åˆ°ä½æ¸©å’Œé«˜é€Ÿ */
             g_ucInConstantTempe = 3;
             if (1 == g_ucPowerKeyPress)
             {
@@ -491,7 +491,7 @@ void HeatDevice_WorkMode_Choose_Operation(void)
             break;
 
         case 2:
-            /* ºãÎÂµµÊä³ö£¬ÊıÂë¹ÜÏÔÊ¾ÓÃ»§µ÷£¬µçÔ´µÆ£¬¸ºÀë×ÓµÆ£¬ÎÂ¶ÈµÆºÍºãÎÂµÆµãÁÁ£¬ÇĞ»»µ½ÎÂ¶È×Ô¶¯¿ØÖÆÄ£Ê½ */
+            /* æ’æ¸©æ¡£è¾“å‡ºï¼Œæ•°ç ç®¡æ˜¾ç¤ºç”¨æˆ·è°ƒï¼Œç”µæºç¯ï¼Œè´Ÿç¦»å­ç¯ï¼Œæ¸©åº¦ç¯å’Œæ’æ¸©ç¯ç‚¹äº®ï¼Œåˆ‡æ¢åˆ°æ¸©åº¦è‡ªåŠ¨æ§åˆ¶æ¨¡å¼ */
             g_ucInConstantTempe = 1;
             if (1 == g_ucPowerKeyPress)
             {
@@ -516,13 +516,13 @@ void HeatDevice_WorkMode_Choose_Operation(void)
     return;
 }
 
-/* ÎÂ¶È¼Ó¼õ²Ù×÷ */
+/* æ¸©åº¦åŠ å‡æ“ä½œ */
 void HeatDevice_AddOrSub_Temp_Operation(unsigned char ucOperatType)
 {
-    /* ÎÂ¶ÈÉèÖÃ£¬×î¸ß30¶È£¬×îµÍ10¶È */
+    /* æ¸©åº¦è®¾ç½®ï¼Œæœ€é«˜30åº¦ï¼Œæœ€ä½10åº¦ */
     if (1 == ucOperatType)
     {
-        /* ÎÂ¶È¼Ó²Ù×÷ */
+        /* æ¸©åº¦åŠ æ“ä½œ */
         if (29 <= g_ucCurrentTempValue)
         {
             g_ucCurrentTempValue = 29;
@@ -533,7 +533,7 @@ void HeatDevice_AddOrSub_Temp_Operation(unsigned char ucOperatType)
     }
     else if (0 == ucOperatType)
     {
-        /* ÎÂ¶È¼õ²Ù×÷ */
+        /* æ¸©åº¦å‡æ“ä½œ */
         if (11 > g_ucCurrentTempValue)
         {
             g_ucCurrentTempValue = 11;
@@ -560,10 +560,10 @@ void HeatDevice_AddOrSub_Temp_Operation(unsigned char ucOperatType)
     return;
 }
 
-/* ¶¨Ê±Æ÷²Ù×÷ */
+/* å®šæ—¶å™¨æ“ä½œ */
 void HeatDevice_Timer_Operation(void)
 {
-    /* g_ucTimerKeySwitchFlagÕâ¸ö±ê¼ÇÔÚµçÔ´°´Å¥¡¢Ä£Ê½ÇĞ»»°´Å¥ºÍÍ¯Ëø°´Å¥°´ÏÂÊ±ÖÃÉÏ */
+    /* g_ucTimerKeySwitchFlagè¿™ä¸ªæ ‡è®°åœ¨ç”µæºæŒ‰é’®ã€æ¨¡å¼åˆ‡æ¢æŒ‰é’®å’Œç«¥é”æŒ‰é’®æŒ‰ä¸‹æ—¶ç½®ä¸Š */
     if (0 == g_ucTimerKeySwitchFlag)
     {
         g_ucSetTimerValue ++;
@@ -583,7 +583,7 @@ void HeatDevice_Timer_Operation(void)
     g_ucTimerKeySwitchFlag = 0;
  //   g_ucCountDownFlag = 1;
 }
-/* ¾ØÕó°´¼ü¹¦ÄÜ·Ö·¢´¦Àí */
+/* çŸ©é˜µæŒ‰é”®åŠŸèƒ½åˆ†å‘å¤„ç† */
 void HeatDevice_KeyBoard_Function_disapatch(void)
 {
     if (1 == IOCAFbits.IOCAF0)
@@ -638,7 +638,7 @@ void HeatDevice_KeyBoard_Function_disapatch(void)
     }
 }
 
-/* ¾ØÕó°´¼üÉ¨ÃèÈ¥¶¶È·ÈÏº¯Êı */
+/* çŸ©é˜µæŒ‰é”®æ‰«æå»æŠ–ç¡®è®¤å‡½æ•° */
 void HeatDevice_KeyBoard_Confirm(void)
 {   
     if (1 == g_unPressFlag.ucLock)
@@ -647,7 +647,7 @@ void HeatDevice_KeyBoard_Confirm(void)
         
         if (0 == PORTAbits.RA2)
         {
-            /* Í¯Ëø */        
+            /* ç«¥é” */        
             HeatDevice_Child_Lock_Operation();
         }
         PORTAbits.RA5 = 0;
@@ -657,7 +657,7 @@ void HeatDevice_KeyBoard_Confirm(void)
         PORTAbits.RA5 = 1;
         if (0 == PORTAbits.RA1)
         {
-            /* Ä£Ê½Ñ¡Ôñ£¬µçÔ´¿ª¹Ø¿ªÆôÊ±²ÅÓĞĞ§*/
+            /* æ¨¡å¼é€‰æ‹©ï¼Œç”µæºå¼€å…³å¼€å¯æ—¶æ‰æœ‰æ•ˆ*/
             if (((1 == g_ucPowerKeyPress) && (!g_ucChildLockFunEnableFlag)) ||
                 (0 != g_ucSetTimerValue) && (!g_ucChildLockFunEnableFlag))
             {
@@ -671,7 +671,7 @@ void HeatDevice_KeyBoard_Confirm(void)
         PORTAbits.RA5 = 1;
         if (0 == PORTAbits.RA0)
         {
-            /* ¿ª¹Ø²Ù×÷*/
+            /* å¼€å…³æ“ä½œ*/
             if (!g_ucChildLockFunEnableFlag)
             {
                 HeatDevice_Control_Switch_Operation();
@@ -685,7 +685,7 @@ void HeatDevice_KeyBoard_Confirm(void)
         PORTAbits.RA4 = 1;
         if (0 == PORTAbits.RA2)
         {
-            /* ÎÂ¶È¼Ó£¬µçÔ´¿ª¹Ø¿ªÆôÊ±²ÅÓĞĞ§*/
+            /* æ¸©åº¦åŠ ï¼Œç”µæºå¼€å…³å¼€å¯æ—¶æ‰æœ‰æ•ˆ*/
             if ((1 == g_ucPowerKeyPress) && (1 == g_ucInConstantTempe) && (!g_ucChildLockFunEnableFlag))
             {
                 HeatDevice_AddOrSub_Temp_Operation(1);
@@ -698,7 +698,7 @@ void HeatDevice_KeyBoard_Confirm(void)
         PORTAbits.RA4 = 1;
         if (0 == PORTAbits.RA1)
         {
-            /* ÎÂ¶È¼õ£¬µçÔ´¿ª¹Ø¿ªÆôÊ±²ÅÓĞĞ§*/
+            /* æ¸©åº¦å‡ï¼Œç”µæºå¼€å…³å¼€å¯æ—¶æ‰æœ‰æ•ˆ*/
             if ((1 == g_ucPowerKeyPress) && (1 == g_ucInConstantTempe) && (!g_ucChildLockFunEnableFlag))
             {
                 HeatDevice_AddOrSub_Temp_Operation(0);
@@ -711,7 +711,7 @@ void HeatDevice_KeyBoard_Confirm(void)
         PORTAbits.RA4 = 1;
         if (0 == PORTAbits.RA0)
         {
-            /* ¶¨Ê±²Ù×÷ */
+            /* å®šæ—¶æ“ä½œ */
             if (!g_ucChildLockFunEnableFlag)
             {
                 HeatDevice_Timer_Operation();
@@ -723,7 +723,7 @@ void HeatDevice_KeyBoard_Confirm(void)
     return;
 }
 
-/* ºìÍâÏßÖ¸Áî¹¦ÄÜ·Ö·¢ */
+/* çº¢å¤–çº¿æŒ‡ä»¤åŠŸèƒ½åˆ†å‘ */
 void HeatDevice_Infra_Red_Function_Disapatch(void)
 {
     //unsigned char ucUserCodeH = 0;
@@ -731,48 +731,48 @@ void HeatDevice_Infra_Red_Function_Disapatch(void)
     unsigned char ucFunPositiveCode = 0;
     unsigned char ucFunNegativeCode = 0;
     
-    /* ´ÓºìÍâĞòÁĞÂëÖĞ»ñÈ¡ÓÃ»§Âë£¬¹¦ÄÜ±àÂëºÍ·´±àÂë */
+    /* ä»çº¢å¤–åºåˆ—ç ä¸­è·å–ç”¨æˆ·ç ï¼ŒåŠŸèƒ½ç¼–ç å’Œåç¼–ç  */
    // ucUserCodeH = (unsigned char)(g_InfraData >> 24);
    // ucUserCodeL = (unsigned char)((g_InfraData & 0xff0000) >> 16);
     ucFunPositiveCode = (g_InfraData & 0xff00) >> 8;
     ucFunNegativeCode = g_InfraData & 0xff;
     
-    /* ¶Ô¹¦ÄÜ±àÂë½øĞĞĞ£Ñé¼ì²é */
+    /* å¯¹åŠŸèƒ½ç¼–ç è¿›è¡Œæ ¡éªŒæ£€æŸ¥ */
     if (0 != ucFunPositiveCode & ucFunNegativeCode)
     {
-        /*½ÓÊÕµ½µÄÊı¾İÓĞÎó */
+        /*æ¥æ”¶åˆ°çš„æ•°æ®æœ‰è¯¯ */
     }
     
-    /* ¸ù¾İ¹¦ÄÜ±àÂë½øĞĞ·Ö·¢Ö´ĞĞ */
+    /* æ ¹æ®åŠŸèƒ½ç¼–ç è¿›è¡Œåˆ†å‘æ‰§è¡Œ */
     switch (ucFunPositiveCode)
     {
         case 0x30:
-            /* ¶¨Ê±²Ù×÷ */
+            /* å®šæ—¶æ“ä½œ */
             if (!g_ucChildLockFunEnableFlag)
             {
                 HeatDevice_Timer_Operation();
             }
             break;
         case 0x70:
-            /* ÎÂ¶È¼Ó£¬µçÔ´¿ª¹Ø¿ªÆôÊ±²ÅÓĞĞ§*/
+            /* æ¸©åº¦åŠ ï¼Œç”µæºå¼€å…³å¼€å¯æ—¶æ‰æœ‰æ•ˆ*/
             if ((1 == g_ucPowerKeyPress) && (1 == g_ucInConstantTempe) && (!g_ucChildLockFunEnableFlag))
             {
                 HeatDevice_AddOrSub_Temp_Operation(1);
             }
             break;
         case 0x60:
-            /* ÎÂ¶È¼õ£¬µçÔ´¿ª¹Ø¿ªÆôÊ±²ÅÓĞĞ§*/
+            /* æ¸©åº¦å‡ï¼Œç”µæºå¼€å…³å¼€å¯æ—¶æ‰æœ‰æ•ˆ*/
             if ((1 == g_ucPowerKeyPress) && (1 == g_ucInConstantTempe) && (!g_ucChildLockFunEnableFlag))
             {
                 HeatDevice_AddOrSub_Temp_Operation(0);
             }
             break;
         case 0x20:
-            /* Í¯Ëø */        
+            /* ç«¥é” */        
             HeatDevice_Child_Lock_Operation();
             break;
         case 0x78:
-            /* Ä£Ê½Ñ¡Ôñ£¬µçÔ´¿ª¹Ø¿ªÆôÊ±²ÅÓĞĞ§*/
+            /* æ¨¡å¼é€‰æ‹©ï¼Œç”µæºå¼€å…³å¼€å¯æ—¶æ‰æœ‰æ•ˆ*/
            // if ((1 == g_ucPowerKeyPress) && (!g_ucChildLockFunEnableFlag))
           //  {
             if (((1 == g_ucPowerKeyPress) && (!g_ucChildLockFunEnableFlag)) ||
@@ -783,24 +783,24 @@ void HeatDevice_Infra_Red_Function_Disapatch(void)
           //}
             break;
         case 0x38:
-            /* ¿ª¹Ø²Ù×÷*/
+            /* å¼€å…³æ“ä½œ*/
             if (!g_ucChildLockFunEnableFlag)
             {
                 HeatDevice_Control_Switch_Operation();
             }
             break;
         default:
-            /* ±àÂëÒì³£ */
+            /* ç¼–ç å¼‚å¸¸ */
             break;
     }
     
     return;
 }
 
-/* ºìÍâÏßĞÅºÅ´¦Àí */
+/* çº¢å¤–çº¿ä¿¡å·å¤„ç† */
 void HeatDevice_Infra_red_Operation(void)
 {
-    /* Èç¹ûÊÇ·Ç·¨Ê±³¤µÄĞÅºÅÔò¸´Î»¼ÆÊı±äÁ¿ºÍºìÍâ±ê¼Ç */
+    /* å¦‚æœæ˜¯éæ³•æ—¶é•¿çš„ä¿¡å·åˆ™å¤ä½è®¡æ•°å˜é‡å’Œçº¢å¤–æ ‡è®° */
     if ((g_uiInfraRedCounter > 54) || (g_uiInfraRedCounter < 3) ||
         ((g_uiInfraRedCounter > 10) && (g_uiInfraRedCounter < 51)))
     {        
@@ -813,9 +813,9 @@ void HeatDevice_Infra_red_Operation(void)
 	
     if (g_uiInfraRedCounter >= 51 && g_uiInfraRedCounter <= 54)
     {
-        /* ÊÕµ½Ò»¸öÇ°µ¼Âë */
+        /* æ”¶åˆ°ä¸€ä¸ªå‰å¯¼ç  */
         g_uiInfraRedCounter = 0;
-        /* ÖÃÇ°µ¼ÂëÓĞĞ§±ê¼ÇÎ» */
+        /* ç½®å‰å¯¼ç æœ‰æ•ˆæ ‡è®°ä½ */
         g_ucStartFlagValid = 1;
         g_ucDataIndex = 31;
         
@@ -826,7 +826,7 @@ void HeatDevice_Infra_red_Operation(void)
     {
         if ((g_uiInfraRedCounter >= 3) && (g_uiInfraRedCounter <= 6))
         {
-            /* Êı¾İÎª0 */
+            /* æ•°æ®ä¸º0 */
             g_InfraData &= ~(1 << g_ucDataIndex);
             g_uiInfraRedCounter = 0;
             g_ucDataIndex --;
@@ -834,7 +834,7 @@ void HeatDevice_Infra_red_Operation(void)
         }
         else if ((g_uiInfraRedCounter >= 7) && (g_uiInfraRedCounter <= 10))
         {
-            /* Êı¾İÎª1 */
+            /* æ•°æ®ä¸º1 */
             g_InfraData |= (1 << g_ucDataIndex);
             g_uiInfraRedCounter = 0;
             g_ucDataIndex --;
@@ -852,7 +852,7 @@ void HeatDevice_Infra_red_Operation(void)
     return;
 }
 
-/* µçÔ´¹Ø±Õºóµ¹¼ÆÊ±´¦Àíº¯Êı */
+/* ç”µæºå…³é—­åå€’è®¡æ—¶å¤„ç†å‡½æ•° */
 void HeatDevice_Count_Down_Operation(void)
 {
   //  if ((1 == g_ucCountDownFlag) && (1 == g_ucPowerDownFlag))
@@ -873,7 +873,7 @@ void HeatDevice_Count_Down_Operation(void)
             /*g_uiLeftLedDisplayStatuValue = ((LedDisplayMap[g_ucCountDownValue / 10] << 8) | 0x80);
             g_uiRightLedDisplayStatuValue = ((LedDisplayMap[g_ucCountDownValue % 10] << 8) | 0x80);
             g_uiFunLedDisplayStatuValue = 0x80;*/
-            /* ·ç»ú¸ßËÙ×ª¶¯ */
+            /* é£æœºé«˜é€Ÿè½¬åŠ¨ */
             HeatDevice_Set_Device_status(g_ucCountDownValue / 10, g_ucCountDownValue % 10, 0x0, 0x20);
             
             g_ucCountDownValue --;
@@ -884,7 +884,7 @@ void HeatDevice_Count_Down_Operation(void)
     return;
 }
 
-/* ¶¨Ê±Æ÷Timer1ÖĞ¶Ï´¦Àí */
+/* å®šæ—¶å™¨Timer1ä¸­æ–­å¤„ç† */
 void Timer1_Isr(void)
 {
     unsigned short uiLedStatu = 0;
@@ -899,7 +899,7 @@ void Timer1_Isr(void)
     {
         case 1:
              uiLedStatu = g_uiLeftLedDisplayStatuValue;
-             /* ¿ªÊ®½øÖÆÎ»ÊıÂë¹Ü */           
+             /* å¼€åè¿›åˆ¶ä½æ•°ç ç®¡ */           
              uiLedStatu |= 0xe;
              if (1 != g_ucLedFlashCounterFlag % 2)
              {
@@ -908,7 +908,7 @@ void Timer1_Isr(void)
         break;
         case 2:
              uiLedStatu = g_uiRightLedDisplayStatuValue;
-             /* ¿ª¸öÎ»ÊıÂë¹Ü */
+             /* å¼€ä¸ªä½æ•°ç ç®¡ */
              uiLedStatu |= 0xe;
              if (1 != g_ucLedFlashCounterFlag % 2)
              {
@@ -917,7 +917,7 @@ void Timer1_Isr(void)
         break;
         case 3:
               uiLedStatu = g_uiFunLedDisplayStatuValue;
-              /* ¿ª¹¦ÄÜ×´Ì¬µÆ */
+              /* å¼€åŠŸèƒ½çŠ¶æ€ç¯ */
               uiLedStatu |= 0xe;
               uiLedStatu &= ~((unsigned short)(0x8));
               g_ucLedDisplayConFlag = 0;
@@ -931,10 +931,10 @@ void Timer1_Isr(void)
     return;
 }
 
-/* ¶¨Ê±Æ÷Timer2ÖĞ¶Ï´¦Àíº¯Êı */
+/* å®šæ—¶å™¨Timer2ä¸­æ–­å¤„ç†å‡½æ•° */
 void Timer2_Isr(void)
 {  
-    /* ADC×ª»¯¶¨Ê±¼ÆÊı */
+    /* ADCè½¬åŒ–å®šæ—¶è®¡æ•° */
     g_usAdcCoverTimerCount ++;
     
     if (g_ucInfraRedFlag)
@@ -942,7 +942,7 @@ void Timer2_Isr(void)
         g_uiInfraRedCounter ++;
     }
     
-    /* ledµÆÉÁË¸Ê±¼ä¼ÆÊı */
+    /* ledç¯é—ªçƒæ—¶é—´è®¡æ•° */
     if (1 == g_ucLedFlashFlag)
     {
         g_usLedFlashCounter ++;
@@ -955,29 +955,29 @@ void Timer2_Isr(void)
     
     if ((1 == g_ucHighTempOpenFlag) && (1 == g_ucHighTempFirstChooseFlag))
     {
-        /* 5Ãë¶¨Ê±¼ÆÊı */
+        /* 5ç§’å®šæ—¶è®¡æ•° */
         g_usHighTempOpenCount ++;
     }
 }
 
-/* AdcÖĞ¶Ï´¦Àíº¯Êı */
+/* Adcä¸­æ–­å¤„ç†å‡½æ•° */
 void Adc_Isr(void)
 {
     unsigned short uiAdcResult = 0;
     unsigned char ucTempMapIndex = 0;
     
-    /* »ñÈ¡½á¹û */
+    /* è·å–ç»“æœ */
     uiAdcResult = (ADRESLbits.ADRESL | (ADRESHbits.ADRESH << 8));
 
     if (1 == g_ucPowerKeyPress)
     {
         if (1 == g_ucInConstantTempe)
         {
-            /* ÔÚºãÎÂÄ£Ê½Ê±ĞèÒª¸ù¾İµ±Ç°ÎÂ¶ÈÀ´¿ØÖÆ¼ÓÈÈ¹ÜµÄ¿ª¹Ø */       
+            /* åœ¨æ’æ¸©æ¨¡å¼æ—¶éœ€è¦æ ¹æ®å½“å‰æ¸©åº¦æ¥æ§åˆ¶åŠ çƒ­ç®¡çš„å¼€å…³ */       
             ucTempMapIndex = (g_ucCurrentTempValue - 10) / 2;
             if (g_ausSenserRValueMap[ucTempMapIndex] < (uiAdcResult + PICF1503_ADC_TEMP_OFFSET))
             {
-                /* ¼ÓÈÈ */
+                /* åŠ çƒ­ */
                 if (g_ucCurrentTempValue > 20)
                 {
                     g_uiLeftLedDisplayStatuValue = (g_uiLeftLedDisplayStatuValue & 0xff0f)  | 0xe0;
@@ -993,7 +993,7 @@ void Adc_Isr(void)
             }
             else if (g_ausSenserRValueMap[ucTempMapIndex + 1] > (uiAdcResult - PICF1503_ADC_TEMP_OFFSET))
             {
-                /* ¹Ø±Õ */
+                /* å…³é—­ */
                 g_uiLeftLedDisplayStatuValue = (g_uiLeftLedDisplayStatuValue & 0xff0f)  | 0x10;
                 g_uiRightLedDisplayStatuValue = (g_uiRightLedDisplayStatuValue & 0xff0f) | 0x10;
                 g_uiFunLedDisplayStatuValue = (g_uiFunLedDisplayStatuValue & 0xff0f) | 0x10;
@@ -1003,17 +1003,17 @@ void Adc_Isr(void)
         {
             if (631 < (uiAdcResult + PICF1503_ADC_TEMP_OFFSET))
             {
-                /* ¼ÓÈÈ */
+                /* åŠ çƒ­ */
                 if (2 == g_ucInConstantTempe)
                 {
-                    /* ÎÂ¶È¸ßµµ */
+                    /* æ¸©åº¦é«˜æ¡£ */
                     g_uiLeftLedDisplayStatuValue = (g_uiLeftLedDisplayStatuValue & 0xff0f)  | 0xe0;
                     g_uiRightLedDisplayStatuValue = (g_uiRightLedDisplayStatuValue & 0xff0f) | 0xe0;
                     g_uiFunLedDisplayStatuValue = (g_uiFunLedDisplayStatuValue & 0xff0f) | 0xe0;
                 }
                 else if (3 == g_ucInConstantTempe)
                 {
-                    /*ÎÂ¶ÈµÍµµ */
+                    /*æ¸©åº¦ä½æ¡£ */
                     g_uiLeftLedDisplayStatuValue = (g_uiLeftLedDisplayStatuValue & 0xff0f)  | 0xa0;
                     g_uiRightLedDisplayStatuValue = (g_uiRightLedDisplayStatuValue & 0xff0f) | 0xa0;
                     g_uiFunLedDisplayStatuValue = (g_uiFunLedDisplayStatuValue & 0xff0f) | 0xa0;
@@ -1021,7 +1021,7 @@ void Adc_Isr(void)
             }
             else
             {
-                /* ¹Ø±Õ */
+                /* å…³é—­ */
                 g_uiLeftLedDisplayStatuValue = (g_uiLeftLedDisplayStatuValue & 0xff0f)  | 0x10;
                 g_uiRightLedDisplayStatuValue = (g_uiRightLedDisplayStatuValue & 0xff0f) | 0x10;
                 g_uiFunLedDisplayStatuValue = (g_uiFunLedDisplayStatuValue & 0xff0f) | 0x10;            
@@ -1036,61 +1036,61 @@ void Adc_Isr(void)
     return;
 }
 
-/* GpioÖĞ¶Ï´¦Àíº¯Êı */
+/* Gpioä¸­æ–­å¤„ç†å‡½æ•° */
 void Gpio_Isr(void)
 {
     if ((1 == IOCAFbits.IOCAF0) || (1 == IOCAFbits.IOCAF1) || (1 == IOCAFbits.IOCAF2))
     {
-        /* È¥Ê¹ÄÜÖĞ¶Ï */
+        /* å»ä½¿èƒ½ä¸­æ–­ */
         IOCANbits.IOCAN &= 0xf8; 
-        /* µ÷ÓÃ°´¼ü·Ö·¢º¯Êı½øĞĞ´¦Àí */
+        /* è°ƒç”¨æŒ‰é”®åˆ†å‘å‡½æ•°è¿›è¡Œå¤„ç† */
         HeatDevice_KeyBoard_Function_disapatch();
-        /* Çå³ıÖĞ¶Ï±ê¼Ç£¬Ê¹ÄÜÖĞ¶Ï */
+        /* æ¸…é™¤ä¸­æ–­æ ‡è®°ï¼Œä½¿èƒ½ä¸­æ–­ */
         IOCAFbits.IOCAF &= 0xf8;
         IOCANbits.IOCAN |= 0x7;
 
     }
     else if ((1 == IOCAFbits.IOCAF3))
     {
-        /* È¥Ê¹ÄÜÖĞ¶Ï */
+        /* å»ä½¿èƒ½ä¸­æ–­ */
         IOCANbits.IOCAN3 = 0;
 
-		/* ºìÍâĞÅºÅ´¦Àíº¯Êı */
+		/* çº¢å¤–ä¿¡å·å¤„ç†å‡½æ•° */
         HeatDevice_Infra_red_Operation();
         g_ucInfraRedFlag = 1;
-		/* Çå³ıÖĞ¶Ï±ê¼Ç£¬Ê¹ÄÜÖĞ¶Ï */
+		/* æ¸…é™¤ä¸­æ–­æ ‡è®°ï¼Œä½¿èƒ½ä¸­æ–­ */
         IOCAFbits.IOCAF3 = 0;
         IOCANbits.IOCAN3 = 1;	       
     }
     else
     {
-        /* Èç¹ûÊÇ·ÇÆÚÍûµÄGPIOÖĞ¶ÏÉÏ±¨Ôò²»´¦Àí£¬Ö±½ÓÇå³ıÖĞ¶Ï±ê¼Ç */
+        /* å¦‚æœæ˜¯éæœŸæœ›çš„GPIOä¸­æ–­ä¸ŠæŠ¥åˆ™ä¸å¤„ç†ï¼Œç›´æ¥æ¸…é™¤ä¸­æ–­æ ‡è®° */
         IOCAFbits.IOCAF &= 0xf;
     }
     
     return;
 }
-/* ÖĞ¶Ï×ÜÈë¿Ú */
+/* ä¸­æ–­æ€»å…¥å£ */
 void interrupt HeatDevice_Interrupt_Isr(void)
 {
     if (1 == PIR1bits.TMR1IF)
     {
-        /* È¥Ê¹ÄÜ¶¨Ê±Æ÷Timer1ÖĞ¶Ï */
+        /* å»ä½¿èƒ½å®šæ—¶å™¨Timer1ä¸­æ–­ */
         PIE1bits.TMR1IE = 0;
-        /* Çå³ıÖĞ¶Ï±ê¼Ç */
+        /* æ¸…é™¤ä¸­æ–­æ ‡è®° */
         PIR1bits.TMR1IF = 0;
         Timer1_Isr();
-        /* Ê¹ÄÜ¶¨Ê±Æ÷Timer1ÖĞ¶Ï */
+        /* ä½¿èƒ½å®šæ—¶å™¨Timer1ä¸­æ–­ */
        PIE1bits.TMR1IE = 1;
     }
     else if (1 == PIR1bits.ADIF)
     {
-        /* È¥Ê¹ÄÜAdcÖĞ¶Ï */
+        /* å»ä½¿èƒ½Adcä¸­æ–­ */
         PIE1bits.ADIE = 0;
-        /* Çå³ıÖĞ¶Ï±ê¼Ç */
+        /* æ¸…é™¤ä¸­æ–­æ ‡è®° */
         PIR1bits.ADIF = 0;
         Adc_Isr();
-        /* Ê¹ÄÜAdcÖĞ¶Ï */
+        /* ä½¿èƒ½Adcä¸­æ–­ */
         PIE1bits.ADIE = 1;
     }
     else if (1 == INTCONbits.IOCIF)
@@ -1099,12 +1099,12 @@ void interrupt HeatDevice_Interrupt_Isr(void)
     }
     else if (1 == PIR1bits.TMR2IF)
     {
-        /* È¥Ê¹ÄÜ¶¨Ê±Æ÷Timer2ÖĞ¶Ï */
+        /* å»ä½¿èƒ½å®šæ—¶å™¨Timer2ä¸­æ–­ */
         PIE1bits.TMR2IE = 0;
-        /* Çå³ıÖĞ¶Ï±ê¼Ç */
+        /* æ¸…é™¤ä¸­æ–­æ ‡è®° */
         PIR1bits.TMR2IF = 0;
         Timer2_Isr();
-        /* Ê¹ÄÜ¶¨Ê±Æ÷Timer2ÖĞ¶Ï */
+        /* ä½¿èƒ½å®šæ—¶å™¨Timer2ä¸­æ–­ */
        PIE1bits.TMR2IE = 1;
     }
     
@@ -1114,47 +1114,47 @@ void interrupt HeatDevice_Interrupt_Isr(void)
 void main(void)
 {   
     unsigned char ucLastTimerValue = 0;
-    /* ±ê¼Ç³õÊ¼»¯ */
+    /* æ ‡è®°åˆå§‹åŒ– */
     g_unPressFlag.ucKeyBoardPressFlag = 0;
     
-    /* ÏµÍ³Ê±ÖÓÅäÖÃ */
+    /* ç³»ç»Ÿæ—¶é’Ÿé…ç½® */
     PicF1503_SystemTime_Config();
-    /* ³õÊ¼»¯ADC */
+    /* åˆå§‹åŒ–ADC */
     Pic16F1503_Adc_Init();
     
-    /* ³õÊ¼»¯GPIO */
+    /* åˆå§‹åŒ–GPIO */
     Pic16F1503_Gpio_Init();
     
-    /* ³õÊ¼»¯I2C */
+    /* åˆå§‹åŒ–I2C */
    Pic16F1503_I2c_Init();
     
-    /* ÏÔÊ¾Öµ³õÊ¼»¯£¬µ÷ÊÔÓÃ */
+    /* æ˜¾ç¤ºå€¼åˆå§‹åŒ–ï¼Œè°ƒè¯•ç”¨ */
 	HeatDevice_Set_Device_status(16, 16, 0, 0x30);
     
-    /* ³õÊ¼»¯Timer1 */
+    /* åˆå§‹åŒ–Timer1 */
     Pic16F1503_Timer1_Init();
     
-    /* ³õÊ¼»¯Timer2 */
+    /* åˆå§‹åŒ–Timer2 */
     Pic16F1503_Timer2_Init();
     
-    /* ÖĞ¶Ï³õÊ¼»¯ */
+    /* ä¸­æ–­åˆå§‹åŒ– */
     Pic16F1503_Int_Init();
    
     while(1)
     {
         if (40 == g_ucTimeCounter)
         {
-            /* µ÷ÓÃ°´¼üÉ¨ÃèÈ·ÈÏº¯Êı */
+            /* è°ƒç”¨æŒ‰é”®æ‰«æç¡®è®¤å‡½æ•° */
             HeatDevice_KeyBoard_Confirm();      
            
-            /* Çå³ıÖĞ¶Ï±ê¼Ç£¬²¢¸´Î»¼ÆÊı±äÁ¿,°´¼ü±ê¼Ç */
+            /* æ¸…é™¤ä¸­æ–­æ ‡è®°ï¼Œå¹¶å¤ä½è®¡æ•°å˜é‡,æŒ‰é”®æ ‡è®° */
             g_unPressFlag.ucKeyBoardPressFlag = 0;
             g_ucTimeCounter = 0;
         }
         
         if (1 == g_ucLedFlashFlag)
         {
-            /* µ±ÉÁË¸±ê¼ÇµÈÓÚ1Ê±£¬ĞèÒª¿ØÖÆµÆÉÁË¸ */
+            /* å½“é—ªçƒæ ‡è®°ç­‰äº1æ—¶ï¼Œéœ€è¦æ§åˆ¶ç¯é—ªçƒ */
             if (2000 == g_usLedFlashCounter)
             {
                 g_ucLedFlashCounterFlag ++;
@@ -1183,7 +1183,7 @@ void main(void)
         
         if (40000 == g_usAdcCoverTimerCount)
         {
-            /* Ã¿10Ãë·¢ÆğÒ»´ÎADC×ª»¯£¬¶ÁÈ¡ÎÂ¸ĞÎÂ¶ÈÖµ£¬ÕâÎ»»áÔÚ×ª»¯Íê³Éºó±»×Ô¶¯Çå³ı */
+            /* æ¯10ç§’å‘èµ·ä¸€æ¬¡ADCè½¬åŒ–ï¼Œè¯»å–æ¸©æ„Ÿæ¸©åº¦å€¼ï¼Œè¿™ä½ä¼šåœ¨è½¬åŒ–å®Œæˆåè¢«è‡ªåŠ¨æ¸…é™¤ */
             ADCON0bits.ADGO = 1;
             g_usAdcCoverTimerCount = 0;
             g_usTimerFuncCount ++;
@@ -1201,7 +1201,7 @@ void main(void)
             }
         }
         
-        /* ¶¨Ê±Ê±¼äµ½Ö´ĞĞÏàÓ¦²Ù×÷ */
+        /* å®šæ—¶æ—¶é—´åˆ°æ‰§è¡Œç›¸åº”æ“ä½œ */
         if (0 != g_ucSetTimerValue)
         {
             if (ucLastTimerValue == g_ucSetTimerValue)
@@ -1210,7 +1210,7 @@ void main(void)
                 {
                     g_usTimerFuncCount = 0;
                     g_ucSetTimerValue = 0;
-                    /* Ö´ĞĞÏàÓ¦µÄ¿ª¹Ø²Ù×÷ */
+                    /* æ‰§è¡Œç›¸åº”çš„å¼€å…³æ“ä½œ */
                     HeatDevice_Control_Switch_Operation();
                 }
             }
@@ -1221,7 +1221,7 @@ void main(void)
             }
         }
         
-        /* µ¹¼ÆÊ±1·ÖÖÓ */
+        /* å€’è®¡æ—¶1åˆ†é’Ÿ */
         HeatDevice_Count_Down_Operation();
     };
     return;
