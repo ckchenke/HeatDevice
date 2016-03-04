@@ -3,7 +3,7 @@
  * Author: lenovo
  *
  * Created on 2015年12月31日, 下午3:41
- */
+ */          
 #include <xc.h>
 #include <pic.h>
 #include <pic16f1503.h>
